@@ -1,0 +1,64 @@
+<mxfile host="app.diagrams.net" modified="2023-06-11T11:25:22.509Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36 OPR/99.0.0.0" etag="hkKNVd0-skTxilBXhQrQ" version="21.3.7" type="github">
+  <diagram id="SJFAG4SczEoxknI5P3zI" name="DB relations">
+    <mxGraphModel dx="1674" dy="766" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="Svj4ogsYsY_IG6W5vvBa-7" value="" style="edgeStyle=entityRelationEdgeStyle;fontSize=12;html=1;endArrow=ERzeroToMany;endFill=1;rounded=0;exitX=1.019;exitY=0.052;exitDx=0;exitDy=0;entryX=0;entryY=0.25;entryDx=0;entryDy=0;exitPerimeter=0;" parent="1" source="NVAH7DP_aXur_OBvcybt-3" target="NVAH7DP_aXur_OBvcybt-5" edge="1">
+          <mxGeometry width="100" height="100" relative="1" as="geometry">
+            <mxPoint x="610" y="450" as="sourcePoint" />
+            <mxPoint x="710" y="350" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Svj4ogsYsY_IG6W5vvBa-9" value="" style="edgeStyle=entityRelationEdgeStyle;fontSize=12;html=1;endArrow=ERzeroToMany;endFill=1;rounded=0;exitX=0;exitY=0.25;exitDx=0;exitDy=0;entryX=1;entryY=0.129;entryDx=0;entryDy=0;entryPerimeter=0;" parent="1" source="NVAH7DP_aXur_OBvcybt-6" target="NVAH7DP_aXur_OBvcybt-11" edge="1">
+          <mxGeometry width="100" height="100" relative="1" as="geometry">
+            <mxPoint x="840" y="210" as="sourcePoint" />
+            <mxPoint x="940" y="110" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Svj4ogsYsY_IG6W5vvBa-13" value="" style="edgeStyle=entityRelationEdgeStyle;fontSize=12;html=1;endArrow=ERzeroToMany;endFill=1;rounded=0;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.25;entryDx=0;entryDy=0;" parent="1" source="NVAH7DP_aXur_OBvcybt-7" target="NVAH7DP_aXur_OBvcybt-8" edge="1">
+          <mxGeometry width="100" height="100" relative="1" as="geometry">
+            <mxPoint x="840" y="210" as="sourcePoint" />
+            <mxPoint x="940" y="110" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="1KrKMVE1a5cAFhjisrMT-1" value="" style="edgeStyle=entityRelationEdgeStyle;fontSize=12;html=1;endArrow=ERzeroToMany;endFill=1;rounded=0;entryX=-0.025;entryY=0.067;entryDx=0;entryDy=0;exitX=1;exitY=0;exitDx=0;exitDy=0;entryPerimeter=0;" parent="1" source="NVAH7DP_aXur_OBvcybt-7" target="NVAH7DP_aXur_OBvcybt-3" edge="1">
+          <mxGeometry width="100" height="100" relative="1" as="geometry">
+            <mxPoint x="830" y="190" as="sourcePoint" />
+            <mxPoint x="930" y="90" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="NVAH7DP_aXur_OBvcybt-2" value="BEACON" style="swimlane;childLayout=stackLayout;horizontal=1;startSize=50;horizontalStack=0;rounded=1;fontSize=14;fontStyle=0;strokeWidth=2;resizeParent=0;resizeLast=1;shadow=0;dashed=0;align=center;arcSize=4;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="450" y="270" width="160" height="320" as="geometry" />
+        </mxCell>
+        <mxCell id="NVAH7DP_aXur_OBvcybt-3" value="+Primary key: ID&lt;br&gt;+Foreign key: HostID&lt;br&gt;+Username&lt;br&gt;+UID&lt;br&gt;+GID&lt;br&gt;+OS&lt;br&gt;+Arch&lt;br&gt;+Transport&lt;br&gt;+PID&lt;br&gt;+LastCheckin&lt;br&gt;+ReconnectInterval&lt;br&gt;+ActiveC2&lt;br&gt;+Locale&lt;br&gt;+CreatedAt&lt;br&gt;+Interval&lt;br&gt;+Jitter&lt;br&gt;+NextCheckin" style="align=left;strokeColor=none;fillColor=none;spacingLeft=4;fontSize=12;verticalAlign=top;resizable=0;rotatable=0;part=1;html=1;" vertex="1" parent="NVAH7DP_aXur_OBvcybt-2">
+          <mxGeometry y="50" width="160" height="270" as="geometry" />
+        </mxCell>
+        <mxCell id="NVAH7DP_aXur_OBvcybt-4" value="BEACON TASK" style="swimlane;childLayout=stackLayout;horizontal=1;startSize=50;horizontalStack=0;rounded=1;fontSize=14;fontStyle=0;strokeWidth=2;resizeParent=0;resizeLast=1;shadow=0;dashed=0;align=center;arcSize=4;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="680" y="270" width="160" height="210" as="geometry" />
+        </mxCell>
+        <mxCell id="NVAH7DP_aXur_OBvcybt-5" value="+Primary key: ID&lt;br&gt;+Foreign key: BeaconID&lt;br&gt;+EnvelopeID&lt;br&gt;+CreatedAt&lt;br&gt;+State&lt;br&gt;+SentAt&lt;br&gt;+CompletedAt&lt;br&gt;+Description&lt;br&gt;+Request&lt;br&gt;+Response" style="align=left;strokeColor=none;fillColor=none;spacingLeft=4;fontSize=12;verticalAlign=top;resizable=0;rotatable=0;part=1;html=1;" vertex="1" parent="NVAH7DP_aXur_OBvcybt-4">
+          <mxGeometry y="50" width="160" height="160" as="geometry" />
+        </mxCell>
+        <mxCell id="NVAH7DP_aXur_OBvcybt-6" value="HOST" style="swimlane;childLayout=stackLayout;horizontal=1;startSize=50;horizontalStack=0;rounded=1;fontSize=14;fontStyle=0;strokeWidth=2;resizeParent=0;resizeLast=1;shadow=0;dashed=0;align=center;arcSize=4;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="230" y="270" width="160" height="150" as="geometry" />
+        </mxCell>
+        <mxCell id="NVAH7DP_aXur_OBvcybt-7" value="+Primary key: ID&lt;br&gt;+Deleted&lt;br&gt;+CreatedAt&lt;br&gt;+Hostname&lt;br&gt;+OSVersion&lt;br&gt;+Locale" style="align=left;strokeColor=none;fillColor=none;spacingLeft=4;fontSize=12;verticalAlign=top;resizable=0;rotatable=0;part=1;html=1;" vertex="1" parent="NVAH7DP_aXur_OBvcybt-6">
+          <mxGeometry y="50" width="160" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="NVAH7DP_aXur_OBvcybt-8" value="LOOT" style="swimlane;childLayout=stackLayout;horizontal=1;startSize=50;horizontalStack=0;rounded=1;fontSize=14;fontStyle=0;strokeWidth=2;resizeParent=0;resizeLast=1;shadow=0;dashed=0;align=center;arcSize=4;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="30" y="450" width="160" height="190" as="geometry" />
+        </mxCell>
+        <mxCell id="NVAH7DP_aXur_OBvcybt-9" value="+Primary key: ID&lt;br&gt;+Foreign key: HostID&lt;br&gt;+CreatedAt&lt;br&gt;+Name&lt;br&gt;+Type&lt;br&gt;+CredentialType&lt;br&gt;+FileType&lt;br&gt;+FileName&lt;br&gt;+FileData" style="align=left;strokeColor=none;fillColor=none;spacingLeft=4;fontSize=12;verticalAlign=top;resizable=0;rotatable=0;part=1;html=1;" vertex="1" parent="NVAH7DP_aXur_OBvcybt-8">
+          <mxGeometry y="50" width="160" height="140" as="geometry" />
+        </mxCell>
+        <mxCell id="NVAH7DP_aXur_OBvcybt-10" value="IOC" style="swimlane;childLayout=stackLayout;horizontal=1;startSize=50;horizontalStack=0;rounded=1;fontSize=14;fontStyle=0;strokeWidth=2;resizeParent=0;resizeLast=1;shadow=0;dashed=0;align=center;arcSize=4;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="35" y="120" width="160" height="190" as="geometry" />
+        </mxCell>
+        <mxCell id="NVAH7DP_aXur_OBvcybt-11" value="+Primary key: ID&lt;br&gt;+Foreign key: HostID&lt;br&gt;+CreatedAt&lt;br&gt;+Path&lt;br&gt;+FileHash&lt;br&gt;+Name&lt;br&gt;+Description&lt;br&gt;+Output&lt;br&gt;+State" style="align=left;strokeColor=none;fillColor=none;spacingLeft=4;fontSize=12;verticalAlign=top;resizable=0;rotatable=0;part=1;html=1;" vertex="1" parent="NVAH7DP_aXur_OBvcybt-10">
+          <mxGeometry y="50" width="160" height="140" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

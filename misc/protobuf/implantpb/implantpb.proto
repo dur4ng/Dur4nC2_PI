@@ -1,0 +1,170 @@
+syntax = "proto3";
+package implantpb;
+option go_package = "Dur4nC2/misc/protobuf/implantpb";
+
+import "commonpb/common.proto";
+
+// Envelope - Used to encode implant<->server messages since we
+message Envelope {
+  int64 ID = 1;   // Envelope ID used to track request/response
+  uint32 Type = 2; // Message type
+  bytes Data = 3;  // Actual message data
+
+  bool UnknownMessageType = 4; // Set if the implant did not understand the message
+}
+
+// BeaconTasks
+message BeaconTasks {
+  string ID = 1; //beacon id
+  repeated Envelope Tasks = 2;
+  int64 NextCheckin = 3;
+}
+
+message TaskReq {
+  string Encoder = 1;
+  bool RWXPages = 2;
+  uint32 Pid = 3;
+  bytes Data = 4;
+
+  commonpb.Request Request = 9;
+}
+
+message Task {
+  commonpb.Response Response = 9;
+}
+
+// Register - First message the implant sends to the server
+message Register {
+  string Name = 1;
+  string Hostname = 2;
+  string Uuid = 3;
+  string Username = 4;
+  string Uid = 5;
+  string Gid = 6;
+  string Os = 7;
+  string Arch = 8;
+  int32 Pid = 9;
+  string Filename = 10;
+  string ActiveC2 = 11;
+  string Version = 12;
+  int64 ReconnectInterval = 13;
+  string ProxyURL = 14;
+  string ConfigID = 16;
+  int64 PeerID = 17;
+  string Locale = 18;
+}
+
+message BeaconRegister {
+  string ID = 1;
+  int64 Interval = 2;
+  int64 Jitter = 3;
+  Register Register = 4;
+  int64 NextCheckin = 5;
+}
+
+message HTTPSessionInit {
+  bytes Key = 1;
+  string beaconId = 2;
+}
+
+// *** Commands ***
+message WhoamiReq {
+  commonpb.Request Request = 9;
+}
+message WhoamiResp {
+  commonpb.Whoami Whoami = 1;
+  commonpb.Response Response = 9;
+}
+
+// Extensions
+
+message RegisterExtensionReq {
+  string Name = 1;
+  bytes Data = 2;
+  string OS = 3;
+  string Init = 4;
+
+  commonpb.Request Request = 9;
+}
+
+message RegisterExtensionResp {
+  commonpb.Response Response = 9;
+}
+
+message CallExtensionReq {
+  string Name = 1;
+  bool ServerStore = 2;
+  bytes Args = 3;
+  string Export = 4;
+
+  commonpb.Request Request = 9;
+}
+
+message CallExtensionResp {
+  bytes Output = 1;
+  bool ServerStore = 2;
+
+  commonpb.Response Response = 9;
+}
+
+message ListExtensionsReq {
+  commonpb.Request Request = 9;
+}
+
+message ListExtensionsResp {
+  repeated string Names = 1;
+
+  commonpb.Response Response = 9;
+}
+
+// Exec
+
+message ExecuteAssemblyReq{
+  bytes Assembly = 1;
+  repeated string AssemblyArgs = 2;
+  string runtime = 3;
+  bool amsiBypass = 4;
+  bool etwBypass = 5;
+  commonpb.Request Request = 9;
+}
+message ExecuteAssemblyResp{
+  bytes Output = 1;
+
+  commonpb.Response Response = 9;
+}
+
+message ExecuteShellcodeReq{
+  bytes Shellcode = 1;
+  string SpoofedParentProcessName = 2;
+  string MockProgramPath = 3;
+  string InjectionTechnique = 4;
+  string pid = 5;
+
+  commonpb.Request Request = 9;
+}
+message ExecuteShellcodeResp{
+  bytes Output = 1;
+
+  commonpb.Response Response = 9;
+}
+
+// *** Upload / Download ***
+message UploadReq {
+  bytes File = 1;
+  string Path = 2;
+
+  commonpb.Request Request = 9;
+}
+message UploadResp {
+  commonpb.Response Response = 9;
+}
+message DownloadReq {
+  string RemotePath = 1;
+  string LocalPath = 2;
+  commonpb.Request Request = 9;
+}
+message DownloadResp {
+  bytes File = 1;
+  string LocalPath = 2;
+  commonpb.Response Response = 9;
+}

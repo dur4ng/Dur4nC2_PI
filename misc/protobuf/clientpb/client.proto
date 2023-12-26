@@ -1,0 +1,190 @@
+syntax = "proto3";
+package clientpb;
+option go_package = "Dur4nC2/misc/protobuf/clientpb";
+
+import "commonpb/common.proto";
+
+// *** Beacon ***
+message Beacon {
+  string ID = 1;
+  string Name = 2;
+  string Hostname = 3;
+  string UUID = 4; //
+  string Username = 5;
+  string UID = 6; //
+  string GID = 7; //
+  string OS = 8;
+  string Arch = 9;
+  string Transport = 10;
+  string RemoteAddress = 11;
+  int32 PID = 12;
+  string Filename = 13; // Argv[0]
+  int64 LastCheckin = 14;
+  string ActiveC2 = 15;
+  string Version = 16; //
+  bool Evasion = 17; //
+  bool IsDead = 18; //
+  string ProxyURL = 20; //
+  int64 ReconnectInterval = 21;
+  int64 Interval = 22;
+  int64 Jitter = 23;
+  bool Burned = 24; //
+  int64 NextCheckin = 25;
+  int64 TasksCount = 26; //
+  int64 TasksCountCompleted = 27; //
+  string Locale = 28;
+  int64 FirstContact = 29; //
+  string HostID = 30;
+} 
+message Beacons {
+  repeated Beacon Beacons = 2;
+}
+
+// *** Task ***
+message BeaconTask {
+  string ID = 1;
+  string BeaconID = 2;
+  int64 CreatedAt = 3;
+  string State = 4;
+  int64 SentAt  = 5;
+  int64 CompletedAt = 6;
+  bytes Request = 7;
+  bytes Response = 8;
+  string Description = 9;
+}
+message BeaconTasks {
+  string BeaconID = 1;
+  repeated BeaconTask Tasks = 2;
+}
+
+// *** Operator ***
+message Operator {
+    bool Online = 1;
+    string Name = 2;
+}
+message Operators { 
+    repeated Operator Operators = 1;
+}
+  
+// *** Host ***
+message Host {
+    string Hostname = 1;
+    string HostUUID = 2;
+    string OSVersion = 3;
+  
+    repeated IOC IOCs = 4;
+    map<string, ExtensionData> ExtensionData = 5; // ??
+  
+    string Locale = 6;
+    int64 FirstContact = 7;
+}
+message Hosts {
+    repeated Host Hosts = 1;
+}
+message ExtensionData {
+    string Output = 1;
+}
+message IOC {
+    string Path = 1;
+    string FileHash = 2;
+    string ID = 3;
+    string HostID = 4;
+    // Add more attributes
+}
+
+message Loot {
+    LootType Type = 1;
+  
+    string LootID = 2;
+    string Name = 3;
+    string HostID = 4;
+  
+    CredentialType CredentialType = 5;
+    Credential Credential = 6;
+    FileType FileType = 7;
+  
+    commonpb.File File = 8;
+}
+  
+message Loots {
+    repeated Loot Loot = 1;
+}
+enum LootType {
+    LOOT_FILE = 0;
+    LOOT_CREDENTIAL = 1;
+}
+  
+enum CredentialType {
+    NO_CREDENTIAL = 0;
+    USER_PASSWORD = 1;
+    API_KEY = 2;
+    FILE = 3;
+}
+  
+enum FileType {
+    NO_FILE = 0;
+    BINARY = 1;
+    TEXT = 2;
+}
+  
+message Credential {
+    
+    // USER_PASSWORD
+    string User = 2;
+    string Password = 3;
+  
+    // API_KEY
+    string APIKey = 4;
+}
+
+// *** Listener ***
+message HTTPListenerReq {
+    string Domain = 1;
+    string Host = 2;
+    uint32 Port = 3;
+    bool Secure = 4; // Enable HTTPS
+    string Website = 5;
+    bytes Cert = 6;
+    bytes Key = 7;
+    bool ACME = 8;
+    bool Persistent = 9;
+    bool EnforceOTP = 10;
+    int64 LongPollTimeout = 11;
+    int64 LongPollJitter = 12;
+    bool RandomizeJARM = 13; // Only valid with Secure = true
+}
+
+message HTTPListener {
+    uint32 JobID = 1;
+}
+
+// *** Stager ***
+message StagerListenerReq {
+    StageProtocol Protocol = 1;
+    string Host = 2;
+    uint32 Port = 3;
+    bytes Data = 4;
+    bytes Cert = 5;
+    bytes Key = 6;
+    bool ACME = 7;
+}
+enum StageProtocol {
+    TCP = 0;
+    HTTP = 1;
+    HTTPS = 2;
+  }
+  
+message StagerListener {
+    uint32 JobID = 1;
+}
+
+// *** State
+message Job {
+  uint32 ID = 1;
+  string Name = 2;
+  string Description = 3;
+  string Protocol = 4;
+  uint32 Port = 5;
+
+  repeated string Domains = 6;
+}

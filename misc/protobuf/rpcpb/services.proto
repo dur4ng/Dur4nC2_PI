@@ -1,0 +1,52 @@
+syntax = "proto3";
+package rpcpb;
+option go_package = "github.com/dur4ng/Dur4nC2/misc/protobuf/rpcpb";
+import "commonpb/common.proto";
+import "clientpb/client.proto";
+import "implantpb/implantpb.proto";
+
+service TeamServerRPC {
+    // *** Beacons ***
+    rpc ListBeacons(commonpb.Empty) returns (clientpb.Beacons);
+    rpc GetBeacon(clientpb.Beacon) returns (clientpb.Beacon);
+    rpc DeleteBeacon(clientpb.Beacon) returns (commonpb.Empty);
+    rpc GetBeaconTasks(clientpb.Beacon) returns (clientpb.BeaconTasks);
+    rpc GetBeaconTaskContent(clientpb.BeaconTask) returns (clientpb.BeaconTask);
+    rpc CancelBeaconTask(clientpb.BeaconTask) returns (clientpb.BeaconTask);
+    // *** BeaconTasks ***
+
+    // *** Operators ***
+    rpc ListOperators(commonpb.Empty) returns (clientpb.Operators);
+    
+    // *** Hosts ***
+    rpc ListHosts(commonpb.Empty) returns(clientpb.Hosts);
+    rpc GetHost(clientpb.Host) returns(clientpb.Host);
+    rpc DeleteHost(clientpb.Host) returns(commonpb.Empty);
+
+    // *** IOCs ***
+    rpc AddHostIOC(clientpb.IOC) returns(commonpb.Empty);
+    rpc DeleteHostIOC(clientpb.IOC) returns(commonpb.Empty);
+
+    // *** Loots ***
+    rpc AddLoot(clientpb.Loot) returns(clientpb.Loot);
+    rpc DeleteLoot(clientpb.Loot) returns(commonpb.Empty);
+    rpc UpdateLoot(clientpb.Loot) returns(clientpb.Loot);
+    rpc GetLootContent(clientpb.Loot) returns(clientpb.Loot); //ListHostLoot
+    rpc ListLoot(commonpb.Empty) returns(clientpb.Loots);
+    rpc GetLoot(clientpb.Loot) returns(clientpb.Loots);
+    rpc DeleteHostLoot(clientpb.Loot) returns(commonpb.Empty);
+    // rpc ListHostLoot
+
+    // *** Listeners ***
+    rpc StartHTTPSListener(clientpb.HTTPListenerReq) returns (clientpb.HTTPListener);
+    rpc StartHTTPListener(clientpb.HTTPListenerReq) returns (clientpb.HTTPListener);
+    
+    // *** Stager Listener ***
+    rpc StartTCPStagerListener(clientpb.StagerListenerReq) returns(clientpb.StagerListener);
+    rpc StartHTTPStagerListener(clientpb.StagerListenerReq) returns(clientpb.StagerListener);
+
+    // *** Extensions ***
+    rpc RegisterExtension(implantpb.RegisterExtensionReq) returns (implantpb.RegisterExtension);
+    rpc CallExtension(implantpb.CallExtensionReq) returns (implantpb.CallExtension);
+    rpc ListExtensions(implantpb.ListExtensionsReq) returns (implantpb.ListExtensions);
+}

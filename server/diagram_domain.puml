@@ -1,0 +1,438 @@
+@startuml
+namespace docker {
+    class dockerOperatorRepository << (S,Aquamarine) >> {
+        + Conn *gorm.DB
+
+        + Create(operator *models.Operator) error
+        + List() ([]models.Operator, error)
+        + Read(id uuid.UUID) (models.Operator, error)
+        + Update(operator *models.Operator) error
+        + Delete(id uuid.UUID) error
+
+    }
+    class operatorUsecase << (S,Aquamarine) >> {
+        - repository models.OperatorRepository
+
+        + List() (*clientpb.Operators, error)
+        + IsOnline(operatorID uuid.UUID) bool
+
+    }
+}
+
+"models.OperatorRepository" <|-- "docker.dockerOperatorRepository"
+"models.OperatorUsecase" <|-- "docker.operatorUsecase"
+
+namespace models {
+    class Beacon << (S,Aquamarine) >> {
+        + ID uuid.UUID
+        + Deleted gorm.DeletedAt
+        + Name string
+        + HostID uuid.UUID
+        + Username string
+        + UID string
+        + GID string
+        + OS string
+        + Arch string
+        + Transport string
+        + RemoteAddress string
+        + PID int32
+        + LastCheckin time.Time
+        + ReconnectInterval int64
+        + ActiveC2 string
+        + Locale string
+        + CreatedAt time.Time
+        + Interval int64
+        + Jitter int64
+        + NextCheckin int64
+        + Tasks []BeaconTask
+
+        + BeforeCreate(tx *gorm.DB) error
+
+    }
+    interface BeaconRepository  {
+        + Create(beacon Beacon, host Host) (string, error)
+        + List() ([]Beacon, error)
+        + Read(id uuid.UUID) (Beacon, error)
+        + Update(beacon Beacon) error
+        + Delete(id uuid.UUID) error
+        + DeleteAll() error
+        + ListTasks(beacon Beacon) ([]BeaconTask, error)
+
+    }
+    class BeaconTask << (S,Aquamarine) >> {
+        + ID uuid.UUID
+        + EnvelopeID int64
+        + BeaconID uuid.UUID
+        + CreatedAt time.Time
+        + State string
+        + SentAt time.Time
+        + CompletedAt time.Time
+        + Description string
+        + Request []byte
+        + Response []byte
+
+        + BeforeCreate(tx *gorm.DB) error
+
+    }
+    interface BeaconTaskRepository  {
+        + Create(beacon Beacon, task BeaconTask) error
+        + List() ([]BeaconTask, error)
+        + ListPendingTasks(id uuid.UUID) ([]BeaconTask, error)
+        + ListTaskByEnvelopeID(envelopeID int64) (BeaconTask, error)
+        + ListTasksStateAndBeaconID(id string, state string) ([]BeaconTask, error)
+        + Read(id uuid.UUID) (BeaconTask, error)
+        + Cancel(taskId uuid.UUID) error
+        + CleanBeaconTasks(beaconID uuid.UUID) error
+        + Update() 
+        + Delete() 
+
+    }
+    interface BeaconTaskUsecase  {
+        + List() (*clientpb.BeaconTasks, error)
+        + Read(task_pb *clientpb.BeaconTask) (*clientpb.BeaconTask, error)
+        + ListTasksStateAndBeaconID(id string, state string) (*clientpb.BeaconTasks, error)
+        + Cancel(task_pb *clientpb.BeaconTask) (*clientpb.BeaconTask, error)
+
+    }
+    interface BeaconUsecase  {
+        + List() (*clientpb.Beacons, error)
+        + Read(beacon_pb *clientpb.Beacon) (*clientpb.Beacon, error)
+        + Delete(beacon_pb *clientpb.Beacon) (*commonpb.Empty, error)
+        + ListTasks(beacon_pb *clientpb.Beacon) (*clientpb.BeaconTasks, error)
+
+    }
+    class Host << (S,Aquamarine) >> {
+        + ID uuid.UUID
+        + Deleted gorm.DeletedAt
+        + CreatedAt time.Time
+        + Hostname string
+        + OSVersion string
+        + Locale string
+        + Beacons []Beacon
+        + IOCs []IOC
+        + Loots []Loot
+
+        + BeforeCreate(tx *gorm.DB) error
+
+    }
+    interface HostRepository  {
+        + Create(host *Host) error
+        + List() ([]Host, error)
+        + Read(id uuid.UUID) (Host, error)
+        + ReadByHostname(hostname string) (Host, error)
+        + Update(id uuid.UUID) error
+        + Delete(id uuid.UUID) error
+        + ListHostIOC(host Host) ([]IOC, error)
+        + ListHostLoot(host *Host) ([]Loot, error)
+
+    }
+    interface HostUsecase  {
+        + List() (*clientpb.Hosts, error)
+        + Get(host_pb *clientpb.Host) (*clientpb.Host, error)
+        + Delete(host_pb *clientpb.Host) (*commonpb.Empty, error)
+        + ListHostIOC(host_pb clientpb.Host) ([]*clientpb.IOC, error)
+        + ListHostLoot(loot_pb *clientpb.Loot) (*clientpb.Loots, error)
+
+    }
+    class IOC << (S,Aquamarine) >> {
+        + ID uuid.UUID
+        + HostID uuid.UUID
+        + CreatedAt time.Time
+        + Path string
+        + FileHash string
+        + Name string
+        + Description string
+        + Output string
+        + State string
+
+        + BeforeCreate(tx *gorm.DB) error
+
+    }
+    interface IOCRepository  {
+        + Create(ioc IOC) error
+        + List() ([]IOC, error)
+        + Read(id uuid.UUID) (IOC, error)
+        + Update(ioc IOC) error
+
+    }
+    interface IOCUsecase  {
+        + Create(ioc_pb *clientpb.IOC) error
+        + List() ([]*clientpb.IOC, error)
+        + Read(id uuid.UUID) (*clientpb.IOC, error)
+        + Update(ioc_pb clientpb.IOC) error
+
+    }
+    class ImplantConfig << (S,Aquamarine) >> {
+        + ID uuid.UUID
+        + CreatedAt time.Time
+        + Name string
+        + ConnectionMethod string
+        + Domain string
+        + URL string
+        + PathPrefix string
+        + IsBeacon bool
+        + BeaconInterval int64
+        + BeaconJitter int64
+        + ECCPublicKey string
+        + ECCPublicKeyDigest string
+        + ECCPrivateKey string
+        + ECCPublicKeySignature string
+        + ECCServerPublicKey string
+        + OS string
+        + Format OutputFormat
+        + IsSharedLib bool
+        + IsService bool
+        + IsShellcode bool
+        + ImplantPackagePath string
+
+        + BeforeCreate(tx *gorm.DB) error
+
+    }
+    interface ImplantConfigRepository  {
+        + Create() (*ImplantConfig, error)
+        + ReadByECCPlublicKeyDigest(eccPublicKeyDigest *[]byte) (ImplantConfig, error)
+
+    }
+    interface ImplantConfigUsecase  {
+        + Create(implantConfig ImplantConfig) error
+        + ReadByECCPlublicKeyDigest(eccPublicKeyDigest string) (ImplantConfig, error)
+
+    }
+    class Loot << (S,Aquamarine) >> {
+        + ID uuid.UUID
+        + HostID uuid.UUID
+        + CreatedAt time.Time
+        + Name string
+        + Type int
+        + CredentialType int
+        + FileType int
+        + FileName string
+        + FileData []byte
+
+        + BeforeCreate(tx *gorm.DB) error
+
+    }
+    interface LootRepository  {
+        + Create(loot Loot, host Host) error
+        + List() ([]Loot, error)
+        + Read(id uuid.UUID) (Loot, error)
+
+    }
+    interface LootUsecase  {
+        + Create(loot *clientpb.Loot) (*clientpb.Loot, error)
+        + List() (*clientpb.Loots, error)
+        + Read(loot *clientpb.Loot) (*clientpb.Loot, error)
+
+    }
+    class Operator << (S,Aquamarine) >> {
+        + ID uuid.UUID
+        + Username string
+        + CreatedAt time.Time
+        + Token string
+
+        + BeforeCreate(tx *gorm.DB) error
+
+    }
+    interface OperatorRepository  {
+        + Create(operator *Operator) error
+        + List() ([]Operator, error)
+        + Read(id uuid.UUID) (Operator, error)
+        + Update(operator *Operator) error
+        + Delete(id uuid.UUID) error
+
+    }
+    interface OperatorUsecase  {
+        + List() (*clientpb.Operators, error)
+        + IsOnline(operatorID uuid.UUID) bool
+
+    }
+    class Server << (S,Aquamarine) >> {
+        + ID uuid.UUID
+        + CreatedAt time.Time
+        + Key string
+        + Value string
+
+        + BeforeCreate(tx *gorm.DB) error
+
+    }
+    interface ServerRepository  {
+        + SetKeyValue(key string, value string) error
+        + GetKeyValue(key string) (string, error)
+        + DeleteKeyValue(key string) error
+
+    }
+    class models.OutputFormat << (T, #FF7700) >>  {
+    }
+}
+
+
+namespace postgres {
+    class PostgresBeaconRepository << (S,Aquamarine) >> {
+        + Conn *gorm.DB
+
+        + Create(beacon models.Beacon, host models.Host) (string, error)
+        + List() ([]models.Beacon, error)
+        + Read(id uuid.UUID) (models.Beacon, error)
+        + Update(beacon models.Beacon) error
+        + Delete(id uuid.UUID) error
+        + DeleteAll() error
+        + ListTasks(beacon models.Beacon) ([]models.BeaconTask, error)
+
+    }
+    class PostgresBeaconTaskRepository << (S,Aquamarine) >> {
+        + Conn *gorm.DB
+
+        + Create(beacon models.Beacon, task models.BeaconTask) error
+        + List() ([]models.BeaconTask, error)
+        + ListPendingTasks(id uuid.UUID) ([]models.BeaconTask, error)
+        + ListTasksStateAndBeaconID(id string, state string) ([]models.BeaconTask, error)
+        + Read(id uuid.UUID) (models.BeaconTask, error)
+        + ListTaskByEnvelopeID(envelopeID int64) (models.BeaconTask, error)
+        + Cancel(taskId uuid.UUID) error
+        + CleanBeaconTasks(beaconID uuid.UUID) error
+        + Update() 
+        + Delete() 
+
+    }
+    class PostgresHostRepository << (S,Aquamarine) >> {
+        + Conn *gorm.DB
+
+        + Create(host *models.Host) error
+        + List() ([]models.Host, error)
+        + Read(id uuid.UUID) (models.Host, error)
+        + ReadByHostname(hostname string) (models.Host, error)
+        + Delete(id uuid.UUID) error
+        + AddBeacon(beacon models.Beacon, host models.Host) (string, error)
+        + Update(id uuid.UUID) error
+        + ListHostIOC(host models.Host) ([]models.IOC, error)
+        + ListHostLoot(host *models.Host) ([]models.Loot, error)
+
+    }
+    class PostgresIOCRepository << (S,Aquamarine) >> {
+        + Conn *gorm.DB
+
+        + Create(ioc models.IOC) error
+        + List() ([]models.IOC, error)
+        + Read(id uuid.UUID) (models.IOC, error)
+        + Update(ioc models.IOC) error
+
+    }
+    class PostgresLootRepository << (S,Aquamarine) >> {
+        + Conn *gorm.DB
+
+        + Create(loot models.Loot, host models.Host) error
+        + List() ([]models.Loot, error)
+        + Read(id uuid.UUID) (models.Loot, error)
+
+    }
+    class PostgresOperatorRepository << (S,Aquamarine) >> {
+        + Conn *gorm.DB
+
+        + Create(operator *models.Operator) error
+        + List() ([]models.Operator, error)
+        + Read(id uuid.UUID) (models.Operator, error)
+        + Update(operator *models.Operator) error
+        + Delete(id uuid.UUID) error
+
+    }
+    class mysqlBeaconRepository << (S,Aquamarine) >> {
+        + Conn *gorm.DB
+
+        + Create(beacon models.Beacon, host models.Host) error
+        + List() ([]models.Beacon, error)
+        + Read(id uuid.UUID) (models.Beacon, error)
+        + Update(beacon models.Beacon) error
+        + Delete(id uuid.UUID) error
+        + ListTasks(beacon models.Beacon) ([]models.BeaconTask, error)
+
+    }
+    class postgresImplantRepository << (S,Aquamarine) >> {
+        + Conn *gorm.DB
+
+        + Create() (*models.ImplantConfig, error)
+        + ReadByECCPlublicKeyDigest(eccPublicKeyDigest *[]byte) (models.ImplantConfig, error)
+
+    }
+    class postgresServerRepository << (S,Aquamarine) >> {
+        + Conn *gorm.DB
+
+        + SetKeyValue(key string, value string) error
+        + GetKeyValue(key string) (string, error)
+        + DeleteKeyValue(key string) error
+
+    }
+}
+
+"models.BeaconRepository" <|-- "postgres.PostgresBeaconRepository"
+"models.BeaconTaskRepository" <|-- "postgres.PostgresBeaconTaskRepository"
+"models.HostRepository" <|-- "postgres.PostgresHostRepository"
+"models.IOCRepository" <|-- "postgres.PostgresIOCRepository"
+"models.LootRepository" <|-- "postgres.PostgresLootRepository"
+"models.OperatorRepository" <|-- "postgres.PostgresOperatorRepository"
+"models.ImplantConfigRepository" <|-- "postgres.postgresImplantRepository"
+"models.ServerRepository" <|-- "postgres.postgresServerRepository"
+
+namespace usecase {
+    class beaconUsecase << (S,Aquamarine) >> {
+        - repository models.BeaconRepository
+
+        + List() (*clientpb.Beacons, error)
+        + Read(beacon_pb *clientpb.Beacon) (*clientpb.Beacon, error)
+        + Delete(beacon_pb *clientpb.Beacon) (*commonpb.Empty, error)
+        + ListTasks(beacon_pb *clientpb.Beacon) (*clientpb.BeaconTasks, error)
+
+    }
+    class hostUsecase << (S,Aquamarine) >> {
+        - repository models.HostRepository
+
+        + List() (*clientpb.Hosts, error)
+        + Get(host_pb *clientpb.Host) (*clientpb.Host, error)
+        + Delete(host_pb *clientpb.Host) (*commonpb.Empty, error)
+        + ListHostIOC(host_pb clientpb.Host) ([]*clientpb.IOC, error)
+        + ListHostLoot(loot_pb *clientpb.Loot) (*clientpb.Loots, error)
+
+    }
+    class iocUsecase << (S,Aquamarine) >> {
+        - repository models.IOCRepository
+
+        + Create(ioc_pb *clientpb.IOC) error
+        + List() ([]*clientpb.IOC, error)
+        + Read(id uuid.UUID) (*clientpb.IOC, error)
+        + Update(ioc_pb clientpb.IOC) error
+
+    }
+    class lootUsecase << (S,Aquamarine) >> {
+        - repository models.LootRepository
+
+        + Create(loot_pb *clientpb.Loot) (*clientpb.Loot, error)
+        + List() (*clientpb.Loots, error)
+        + Read(loot_pb *clientpb.Loot) (*clientpb.Loot, error)
+
+    }
+    class operatorUsecase << (S,Aquamarine) >> {
+        - repository models.OperatorRepository
+
+        + List() (*clientpb.Operators, error)
+        + IsOnline(operatorID uuid.UUID) bool
+
+    }
+    class taskUsecase << (S,Aquamarine) >> {
+        - repository models.BeaconTaskRepository
+
+        + List() (*clientpb.BeaconTasks, error)
+        + ListTasksStateAndBeaconID(id string, state string) (*clientpb.BeaconTasks, error)
+        + Read(task_pb *clientpb.BeaconTask) (*clientpb.BeaconTask, error)
+        + Cancel(task_pb *clientpb.BeaconTask) (*clientpb.BeaconTask, error)
+
+    }
+}
+
+"models.BeaconUsecase" <|-- "usecase.beaconUsecase"
+"models.HostUsecase" <|-- "usecase.hostUsecase"
+"models.IOCUsecase" <|-- "usecase.iocUsecase"
+"models.LootUsecase" <|-- "usecase.lootUsecase"
+"models.OperatorUsecase" <|-- "usecase.operatorUsecase"
+"models.BeaconTaskUsecase" <|-- "usecase.taskUsecase"
+
+"__builtin__.int32" #.. "models.OutputFormat"
+@enduml

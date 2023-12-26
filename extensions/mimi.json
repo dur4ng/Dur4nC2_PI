@@ -1,0 +1,10 @@
+{
+  "name": "mimi",
+  "description": "mimi dll",
+  "help": "",
+  "files": [{"os": "windows", "arch": "x64", "path": "C:\\Users\\Jorge\\GolandProjects\\Dur4nC2\\extensions\\mimilib.dll"}],
+  "arguments": [],
+  "entrypoint": "coffee",
+  "init": "",
+  "-": ""
+}

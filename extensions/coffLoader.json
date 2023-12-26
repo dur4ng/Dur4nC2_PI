@@ -1,0 +1,8 @@
+{
+  "name": "coff-loader",
+  "description": "In memory same process runner of COFF binaries",
+  "help": "...",
+  "files": [{"os": "windows", "arch": "x64", "path": "/home/dur4n/repos/Dur4nC2/extensions/COFFLoader.x64.dll"}],
+  "entrypoint": "LoadAndRun",
+  "init": ""
+}

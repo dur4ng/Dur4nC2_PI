@@ -1,0 +1,10 @@
+{
+  "name": "dumpert",
+  "description": "Dump lsass and write it into C:\\Windows\\Temp\\dumpert.dmp",
+  "help": "",
+  "files": [{"os": "windows", "arch": "x64", "path": "C:\\Users\\Jorge\\GolandProjects\\Dur4nC2\\extensions\\dumpert.dll"}],
+  "arguments": [],
+  "entrypoint": "Dump",
+  "init": "",
+  "-": ""
+}

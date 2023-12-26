@@ -1,0 +1,13 @@
+{
+  "name": "dir",
+  "description": "COF binary that list current directory",
+  "help": "...",
+  "files": [{"os": "windows", "arch": "x64", "path": "C:\\Users\\Jorge\\GolandProjects\\Dur4nC2\\extensions\\dir.x64.o"}],
+  "entrypoint": "go",
+  "arguments": [
+    {"name": "directory", "desc": "directory to list", "type": "wstring", "optional": false},
+    {"name": "subdirs", "desc":  "...", "type": "short", "optional": true}
+  ],
+  "depends_on": "coff-loader",
+  "init": ""
+}

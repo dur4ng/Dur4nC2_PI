@@ -1,0 +1,9 @@
+{
+  "name": "arp",
+  "description": "COF binary that arp table",
+  "help": "...",
+  "files": [{"os": "windows", "arch": "x64", "path": "/home/dur4n/repos/Dur4nC2/extensions/arp.x64.o"}],
+  "entrypoint": "go",
+  "depends_on": "coff-loader",
+  "init": ""
+}
